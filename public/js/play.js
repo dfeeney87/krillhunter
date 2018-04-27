@@ -1,79 +1,24 @@
-<!doctype html> 
-<html lang="en"> 
-<head> 
-    <meta charset="UTF-8" />
-    <title>Krill Hunter</title>
-    <script src="//cdn.jsdelivr.net/npm/phaser@3.1.1/dist/phaser.js"></script>
-    <script type="text/javascript" src="js/boot.js"></script>
-    <script type="text/javascript" src="js/load.js"></script>
-    <script type="text/javascript" src="js/menu.js"></script>
-    <script type="text/javascript" src="js/play.js"></script>
-    <script type="text/javascript" src="js/win.js"></script>
-    <script type="text/javascript" src="js/game.js"></script>
+let map, stage;
+let groundLayer;
+let backgroundLayer;
+let fishLayer;
+let cursors;
+let player;
+let width;
+let height;
+let krills;
+let score = 0;
+let health = 100;
+let scoreText;
+let healthText;
 
-    <style type="text/css">
-        body {
-            margin: 20;
-        }
-    </style>
-</head>
-<body>
-    <div>
-        <div id="gameDiv"></div>
-    </div>
-<!-- <script type="text/javascript">
+let playstate = {
 
-    var config = {
-        type: Phaser.AUTO,
-        width: 1280,
-        height: 1000,
-        physics: {
-            default: 'arcade',
-            arcade: {
-                gravity: { y: 250 },
-                debug: false
-            }
-        },
-        scene: {
-            preload: preload,
-            create: create,
-            update: update
-        }
-    };
-
-    let map, stage;
-    let groundLayer;
-    let backgroundLayer;
-    let fishLayer;
-    let cursors;
-    let player;
-    let width;
-    let height;
-    let krills;
-    let score = 0;
-    let health = 100;
-    let scoreText;
-    let healthText;
-
-    var game = new Phaser.Game(config);
-
-    function preload ()
-    {
-        this.load.tilemapTiledJSON('map', 'mapper.json')
-        this.load.image('fishTilesheet', 'fishTilesheet.png');
-        // this.load.spritesheet('fishTilesheet', 'fishTilesheet.png', {frameWidth: 128, frameHeight: 128});
-        this.load.image('whale', 'narman.png');
-        this.load.image('krill', 'mediumpinkcloud.png');
-        this.load.spritesheet('narley', 'narleysprite.png', {frameWidth: 120, frameHeight: 86});
-
-}
-
-    function create ()
-    {
+create: function () {
         map = this.make.tilemap({key: 'map'});
-        
-        var allTiles = map.addTilesetImage('fishTilesheet');    
-        
+
+        var allTiles = map.addTilesetImage('fishTilesheet');
+
         backgroundLayer = map.createDynamicLayer('backgroundlayer', allTiles, 0, 0);
         fishLayer = map.createDynamicLayer('fishlayer', allTiles, 0, 0);
         groundLayer = map.createDynamicLayer('groundlayer', allTiles, 0, 0);
@@ -82,7 +27,7 @@
         this.physics.world.bounds.height = backgroundLayer.height;
 
         groundLayer.setCollisionByExclusion([-1]);
-        
+
         player = this.physics.add.sprite(0, 800, 'narley');
         player.scaleX = 2;
         player.scaleY = 2;
@@ -102,7 +47,7 @@
             frameRate: 10,
             repeat: -1
         });
-        
+
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('narley', { start: 0, end: 7 }),
@@ -161,16 +106,16 @@
         playerHealthText = this.add.text(16, 16, 'Health: 100', {fontSize: '24px', fill: '#000'})
         scoreText.setScrollFactor(0);
         playerHealthText.setScrollFactor(0);
-      }
+      },
 
-    function update ()
+    update: function ()
     {
-             if (cursors.left.isDown) 
+             if (cursors.left.isDown)
             {
-                player.setVelocityX(-260);              
+                player.setVelocityX(-260);
                 if (player.scaleX > 0){
                 player.scaleX = player.scaleX * -1}
-                player.anims.play('left', true);   
+                player.anims.play('left', true);
             }
 
         else if (cursors.right.isDown)
@@ -192,15 +137,15 @@
             player.setVelocityY(180);
             player.anims.play('down');
         }
-        else 
+        else
             {
                 player.setVelocityX(0);
 
                 player.anims.play('turn');
             }
-    }
+    },
 
-    function collectKrillCB (player, krill) {
+    collectKrillCB: function (player, krill) {
             krill.disableBody(true, true);
             let multiplier = Number(krill.scaleX);
 
@@ -213,7 +158,7 @@
             scoreText.setText(`Score: ${score}`);
 
             if (krills.countActive(true) === 0) {
-                
+
                 krills.children.iterate(child => {
                     child.enableBody(true, child.x, 0, true, true);
                     child.setBounce(1);
@@ -224,7 +169,7 @@
                     child.scaleX = rand;
                     child.scaleY = rand;
                 });
-                
+
                 // var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
                 // var bomb = bombs.create(x, 16, 'bomb');
@@ -233,12 +178,9 @@
                 // bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
                 // bomb. allowGravity = false;
             }
+        },
+
+        Win: function () {
+            game.state.start('win');
         }
-
-
-
-
-</script> -->
-
-</body>
-</html>
+}
