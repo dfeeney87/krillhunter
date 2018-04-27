@@ -2,11 +2,11 @@
 <html lang="en"> 
 <head> 
     <meta charset="UTF-8" />
-    <title>Making your first Phaser 3 Game - Part 3</title>
+    <title>Krill Hunter</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.1.1/dist/phaser.js"></script>
     <style type="text/css">
         body {
-            margin: 0;
+            margin: 20;
         }
     </style>
 </head>
@@ -16,7 +16,7 @@
 
     var config = {
         type: Phaser.AUTO,
-        width: 800,
+        width: 1000,
         height: 600,
         physics: {
             default: 'arcade',
@@ -32,58 +32,48 @@
         }
     };
 
-    let map;
-    let groundLayer;
+    let map, stage;
+    let groundLayer, backgroundLayer;
     let cursors;
     let player;
-    let bombs;
-    let platforms;
-    let stars;
-    let score = 0;
-    let playerHealth = 100;
-    let playerHealthText;
-    let scoreText;
-    let krill;
-    let jellyFish;
-    let whaler;
+    // let bombs;
+    // let platforms;
+    // let stars;
+    // let score = 0;
+    // let playerHealth = 100;
+    // let playerHealthText;
+    // let scoreText;
+    // let krill;
+    // let jellyFish;
+    // let whaler;
 
     var game = new Phaser.Game(config);
 
     function preload ()
     {
-        this.load.tilemap('tilemap', '/public/', null, Phaser.Tilemap.TILED_JSON)
-        this.load.image('tiles', '/public/fishTilesheet.png')
-        this.load.image('whale', '/assets/narman.png');
-
+        this.load.tilemap('tilemap', '/public/sampleMap.json', null, Phaser.Tilemap.TILED_JSON)
+        this.load.image('tiles', '/public/fishTilesheet@2.png')
+        this.load.image('whale', '/public/narman.png');
 }
 
 
     function create ()
     {
-        // this.add.image(400, 300, 'sky');
-        // platforms = this.physics.add.staticGroup();
-        this.stage.backgroundColor = "#a9f0ff";
-        this.map = this.add.tilemap('tilemap');
-        this.map.addTilesetImage('fishTilesheet', 'tiles');
+        // stage.backgroundColor = "#a9f0ff";
+        map = game.add.tilemap('tilemap');
+        map.addTilesetImage('fishTilesheet', 'tiles');
 
-        this.backgroundlayer = this.map.createLayer('BackgroundLayer');
-        this.groundLayer = this.map.createLayer('GroundLayer');
+        backgroundlayer = map.createLayer('BackgroundLayer');
+        groundLayer = map.createLayer('GroundLayer');
 
-        this.mapsetCollisionBetween(1, 100, true, 'GroundLayer')
+        // mapsetCollisionBetween(1, 100, true, 'GroundLayer')
 
-        this.groundLayer.resizeWorld();
+        groundLayer.resizeWorld();
 
+        // player = this.physics.add.sprite(400, 450, 'whale');
 
-        // platforms.create(400, 568, 'ground').setScale(2).refreshBody();
-
-        // platforms.create(600, 400, 'ground');
-        // platforms.create(50, 250, 'ground');
-        // platforms.create(750, 220, 'ground');
-
-        player = this.physics.add.sprite(400, 450, 'whale');
-
-        player.setBounce(0.2);
-        player.setCollideWorldBounds(true);
+        // player.setBounce(0.2);
+        // player.setCollideWorldBounds(true);
 
         // stars = this.physics.add.group({
         //     key: 'star',
@@ -117,7 +107,8 @@
         //     repeat: -1
         // });
 
-        this.physics.add.collider(this.player, this.groundLayer);
+        // this.physics.add.collider(this.player, this.groundLayer);
+
         // this.physics.add.collider(stars, platforms);
         // this.physics.add.collider(bombs, platforms);
 
@@ -127,7 +118,7 @@
         // this.physics.add.collider(player, bombs, hitBombCB, null, this);
 
 
-        cursors = this.input.keyboard.createCursorKeys();
+        // cursors = this.input.keyboard.createCursorKeys();
         
         // scoreText = this.add.text(330, 16, 'Score: 0', { fontSize: '24px', fill: '#000'});
         // playerHealthText = this.add.text(16, 16, 'Health: 100', {fontSize: '24px', fill: '#000'})
@@ -135,34 +126,34 @@
 
     function update ()
     {
-        if (cursors.left.isDown) 
-            {
-                player.setVelocityX(-160);
+        // if (cursors.left.isDown) 
+        //     {
+        //         player.setVelocityX(-160);
 
-                // player.anims.play('left', true);   
-            }
-        else if (cursors.right.isDown)
-            {
-                player.setVelocityX(160);
+        //         // player.anims.play('left', true);   
+        //     }
+        // else if (cursors.right.isDown)
+        //     {
+        //         player.setVelocityX(160);
                 
-                // player.anims.play('right', true);
-            }
-        else 
-            {
-                player.setVelocityX(0);
+        //         // player.anims.play('right', true);
+        //     }
+        // else 
+        //     {
+        //         player.setVelocityX(0);
 
-                // player.anims.play('turn');
-            }
-        if (cursors.up.isDown || cursors.space.isDown)
-            {
-                player.setVelocityY(-80);
-                // player.setVelocityY(-50);
-            }
-        if (cursors.down.isDown)
-        {
-            player.setVelocityY(80);
-            // player.setVelocityY(-50);
-        }
+        //         // player.anims.play('turn');
+        //     }
+        // if (cursors.up.isDown || cursors.space.isDown)
+        //     {
+        //         player.setVelocityY(-80);
+        //         // player.setVelocityY(-50);
+        //     }
+        // if (cursors.down.isDown)
+        // {
+        //     player.setVelocityY(80);
+        //     // player.setVelocityY(-50);
+        // }
     }
     
     // function collectfishCB (player, star) {
@@ -216,39 +207,39 @@
     //         // }
     //     }
 
-    //     function hitJellyFishCB (player, jelly) {
+        // function hitJellyFishCB (player, jelly) {
 
-    //         if (playerHealth > 10) {
-    //             playerHealth -= 10;
-    //             playerHealthText.setText(`Health: ${playerHealth}`);
-    //         }
+        //     if (playerHealth > 10) {
+        //         playerHealth -= 10;
+        //         playerHealthText.setText(`Health: ${playerHealth}`);
+        //     }
 
-    //         else if (playerHealth > 10) {
-    //         playerHealth -= 10;
-    //         playerHealthText.setText(`Health: ${playerHealth}`);
-    //         this.physics.pause();
+        //     else if (playerHealth > 10) {
+        //     playerHealth -= 10;
+        //     playerHealthText.setText(`Health: ${playerHealth}`);
+        //     this.physics.pause();
 
-    //         player.setTint (0xff0000);
+        //     player.setTint (0xff0000);
 
-    //         player.anims.play('turn');
+        //     player.anims.play('turn');
 
-    //         gameOver = true;
+        //     gameOver = true;
             
-    //         }
-    //     }
+        //     }
+        // }
 
-    //     function getHarpedCB (player, harpoon) {
-    //         playerHealth = 0;
-    //         playerHealthText.setText(`Health: ${playerHealth}`);
-    //         this.physics.pause();
+        // function getHarpedCB (player, harpoon) {
+        //     playerHealth = 0;
+        //     playerHealthText.setText(`Health: ${playerHealth}`);
+        //     this.physics.pause();
 
-    //         player.setTint (0xff0000);
+        //     player.setTint (0xff0000);
 
-    //         // player.anims.play('turn');
+        //     // player.anims.play('turn');
 
-    //         gameOver = true;
+        //     gameOver = true;
 
-    //     }
+        // }
 
 
 </script>

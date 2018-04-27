@@ -1,0 +1,119 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Krill Hunter</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.1.1/dist/phaser.js"></script>
+    <style type="text/css">
+        body {
+            margin: 20;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    var config = {
+        type: Phaser.AUTO,
+        width: 1280,
+        height: 1000,
+        physics: {
+            default: 'arcade',
+            arcade: {
+                gravity: { y: 250 },
+                debug: false
+            }
+        },
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    let map, stage;
+    let groundLayer;
+    let backgroundLayer;
+    let cursors;
+    let player;
+
+    var game = new Phaser.Game(config);
+
+    function preload ()
+    {
+        this.load.tilemapTiledJSON('map', 'mapper.json')
+        this.load.image('fishTilesheet', 'fishTilesheet.png');
+        // this.load.spritesheet('fishTilesheet', 'fishTilesheet.png', {frameWidth: 128, frameHeight: 128});
+        this.load.image('whale', 'narman.png');
+}
+
+
+    function create ()
+    {
+        map = this.make.tilemap({key: 'map'});
+        
+        var allTiles = map.addTilesetImage('fishTilesheet');    
+        // console.log(map)
+        
+        groundLayer = map.createDynamicLayer('groundlayer', allTiles, 0, 0);
+
+        // groundLayer.setCollisionByExclusion([-1]);
+        // console.log(groundLayer)
+        // backgroundlayer = map.createDynamicLayer('back', allTiles, 0, 0);
+        
+        player = this.physics.add.sprite(500, 300, 'whale');
+        player.setBounce(0.3);
+        player.setCollideWorldBounds(true);
+
+        this.physics.add.collider(groundLayer, player);
+        // this.mapsetCollisionBetween(1, 20, true, 'GroundLayer')
+
+        // console.log('ground', groundLayer);
+        // console.log('background', backgroundlayer);
+
+    this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    // make the camera follow the player
+    this.cameras.main.startFollow(player);
+
+        cursors = this.input.keyboard.createCursorKeys();
+
+      }
+
+    function update ()
+    {
+             if (cursors.left.isDown) 
+            {
+                player.setVelocityX(-160);
+
+                // player.anims.play('left', true);   
+            }
+        else if (cursors.right.isDown)
+            {
+                player.setVelocityX(160);
+                
+                // player.anims.play('right', true);
+            }
+        else 
+            {
+                player.setVelocityX(0);
+
+                // player.anims.play('turn');
+            }
+        if (cursors.up.isDown || cursors.space.isDown)
+            {
+                player.setVelocityY(-80);
+                // player.setVelocityY(-50);
+            }
+        if (cursors.down.isDown)
+        {
+            player.setVelocityY(80);
+            // player.setVelocityY(-50);
+        }
+    }
+
+
+</script>
+
+</body>
+</html>
