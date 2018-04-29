@@ -1,7 +1,7 @@
-var bootState = {
-    create: function () {
-        game.physics.startSystem(Phaser.Physics.ARCADE);
+// var bootState = {
+//     create: function () {
+//         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        game.state.start('load');
-    }
-}
+//         game.state.start('load');
+//     }
+// }
