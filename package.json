@@ -1,0 +1,28 @@
+{
+  "name": "krillhunter",
+  "version": "1.0.0",
+  "description": "Whale journeys through the krill",
+  "main": "app.js",
+  "scripts": {
+    "test": "run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dfeeney87/krillhunter.git"
+  },
+  "keywords": [
+    "platformer",
+    "game",
+    "whale"
+  ],
+  "author": "Dan Feeney",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dfeeney87/krillhunter/issues"
+  },
+  "homepage": "https://github.com/dfeeney87/krillhunter#readme",
+  "dependencies": {
+    "http-server": "^0.11.1",
+    "phaser": "^3.6.0"
+  }
+}
