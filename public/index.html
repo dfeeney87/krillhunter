@@ -58,6 +58,7 @@
     let pauseText;
     let music;
     let nom;
+    let startText;
 
     var game = new Phaser.Game(config);
 
@@ -101,11 +102,14 @@
 
         groundLayer.setCollisionByExclusion([0]);
         
+        // startTitle();
+        
 //Whale creation
 
         player = this.physics.add.sprite(0, 800, 'narley');
         player.scaleX = 2;
         player.scaleY = 2;
+        player.setOffset(.1, .1)
         player.anchor = (.2, .5)
         player.setBounce(0.3);
         player.setCollideWorldBounds(true);
@@ -223,8 +227,8 @@
 
         cursors = this.input.keyboard.createCursorKeys();
 
-        scoreText = this.add.text(600, 16, 'Score: 0', { fontSize: '24px', fill: '#000'});
-        playerHealthText = this.add.text(16, 16, 'Health: 100', {fontSize: '24px', fill: '#000'})
+        scoreText = this.add.text(600, 16, 'Score: 0', { fontSize: '24px', fill: '#d3007e'});
+        playerHealthText = this.add.text(16, 16, 'Health: 100', {fontSize: '24px', fill: '#d3007e'})
         scoreText.setScrollFactor(0);
         playerHealthText.setScrollFactor(0);
       }
@@ -271,9 +275,9 @@
                 return    
                 }, 200);    
             if (!this.physics.world.isPaused){
-                pauseText = this.add.text(640, 400, 'PAUSED', {fontSize: '24px', fill: '#000'})
+                pauseText = this.add.text(640, 400, 'PAUSED', {fontSize: '40px', fill: '#d3007e'})
                 pauseText.setScrollFactor(0);
-                this.physics.pause()
+                this.physics.world.pause()
             }
             else {
                 this.physics.resume() 
@@ -301,7 +305,10 @@
             if (health < 100) {
                 health += 5;
             }
-                playerHealthText.setText(`Health: ${health}`);
+            if (health > 100) {
+                health = 100
+            }
+            playerHealthText.setText(`Health: ${health}`);
             scoreText.setText(`Score: ${score}`);
 
             if (krills.countActive(true) === 0) {
@@ -339,6 +346,14 @@
             }
             playerHealthText.setText(`Health: ${health}`);
         }
+
+        // funtion startTitle () {
+        //     startText = this.add.text(640, 400, 'EAT THE KRILL', {fontSize: '100px', fill: '#d3007e'})
+        //     startText.setScrollFactor(0);
+        //     setTimeout(()=>{
+        //         startText.destroy()
+        //     }, 3000)
+        // }
 
 
 
