@@ -57,12 +57,15 @@
     let jellies;
     let pauseText;
     let music;
+    let nom;
+    let startText;
 
     var game = new Phaser.Game(config);
 
     function preload ()
     {
         this.load.tilemapTiledJSON('map', 'mapper.json')
+        // this.load.tilemapTiledJSON('map', 'pleaserwork.json')
         this.load.image('fishTilesheet', 'fishTilesheet.png');
         this.load.image('whale', 'narman.png');
         this.load.image('krill', 'mediumpinkcloud.png');
@@ -71,38 +74,47 @@
         this.load.image('shark', 'Shark1.png')
         this.load.image('gameOver', 'gameOver.png')
         this.load.audio('theme', 'fantasyGameLoop.wav')
+        this.load.audio('bite', 'bite-crunch-01.wav')
 }
 
     function create ()
     {
         map = this.make.tilemap({key: 'map'});
-        
-        console.log(this)
 
-    // var music = this.sound.add('theme');
         music = this.sound.add('theme');
 
         music.play({
             loop: true
         });
 
+        nom = this.sound.add('bite');
+//World creation
+
         var allTiles = map.addTilesetImage('fishTilesheet');    
         
         backgroundLayer = map.createDynamicLayer('backgroundlayer', allTiles, 0, 0);
         fishLayer = map.createDynamicLayer('fishlayer', allTiles, 0, 0);
         groundLayer = map.createDynamicLayer('groundlayer', allTiles, 0, 0);
+        // gravyLayer = map.createDynamicLayer('gravy', allTiles, 0, 0);
 
         this.physics.world.bounds.width = groundLayer.width;
         this.physics.world.bounds.height = backgroundLayer.height;
 
         groundLayer.setCollisionByExclusion([0]);
         
+        // startTitle();
+        
+//Whale creation
+
         player = this.physics.add.sprite(0, 800, 'narley');
         player.scaleX = 2;
         player.scaleY = 2;
+        player.setOffset(.1, .1)
         player.anchor = (.2, .5)
         player.setBounce(0.3);
         player.setCollideWorldBounds(true);
+
+///Whale Animations
 
          this.anims.create({
             key: 'turn',
@@ -138,6 +150,8 @@
             repeat: -1
         });
 
+//Krill creation
+
         krills = this.physics.add.group({
             key: 'krill',
             repeat: 20,
@@ -154,19 +168,12 @@
             child.scaleY = rand;
         })
 
-        // player = this.physics.add.sprite(0, 800, 'narley');
+//Jelly Creation
+
         let jelly = this.physics.add.sprite(500, 600, 'jelly');
         let jelly2 = this.physics.add.sprite(1000, 1100, 'jelly');
         let jelly3 = this.physics.add.sprite(1500, 400, 'jelly');
         let jelly4 = this.physics.add.sprite(2000, 900, 'jelly');
-        
-        // this.jellyGroup = this.game.add.group();
-        // this.jellyGroup.add(jelly);
-        // this.jellyGroup.add(jelly2);
-        // this.jellyGroup.add(jelly3);
-        // this.jellyGroup.add(jelly4);
-
-        // this.jellyGroup.body.allowGravity = false;
 
         jelly.body.allowGravity = false;
         jelly2.body.allowGravity = false;
@@ -183,6 +190,7 @@
         jelly3.body.setOffset(10, 10)
         jelly4.body.setOffset(10, 10)
 
+        console.log(jelly.body)
         this.tweens.add({
             targets: [jelly2, jelly4],
             y: '-=50',
@@ -201,15 +209,10 @@
             repeat: -1
         })
 
-        // player.body.setSize(player.width - 4, player.height);
+//World Physics
 
         this.physics.add.collider(groundLayer, player);
         this.physics.add.collider(groundLayer, krills);
-
-        // this.physics.add.collider(jelly, player);
-        // this.physics.add.collider(jelly2, player);
-        // this.physics.add.collider(jelly3, player);
-        // this.physics.add.collider(jelly4, player);
 
         this.physics.add.overlap(player, krills, collectKrillCB, null, this);
 
@@ -217,7 +220,6 @@
         this.physics.add.collider(player, jelly2, hitJellyFishCB, null, this);
         this.physics.add.collider(player, jelly3, hitJellyFishCB, null, this);
         this.physics.add.collider(player, jelly4, hitJellyFishCB, null, this);
-        // this.mapsetCollisionBetween(1, 20, true, 'groundLayer')
 
     // SCORE AND CAMERA SETTINGS
         this.cameras.main.startFollow(player);
@@ -225,14 +227,15 @@
 
         cursors = this.input.keyboard.createCursorKeys();
 
-        scoreText = this.add.text(600, 16, 'Score: 0', { fontSize: '24px', fill: '#000'});
-        playerHealthText = this.add.text(16, 16, 'Health: 100', {fontSize: '24px', fill: '#000'})
+        scoreText = this.add.text(600, 16, 'Score: 0', { fontSize: '24px', fill: '#d3007e'});
+        playerHealthText = this.add.text(16, 16, 'Health: 100', {fontSize: '24px', fill: '#d3007e'})
         scoreText.setScrollFactor(0);
         playerHealthText.setScrollFactor(0);
       }
 
     function update ()
     {
+        console.log(this);
             if (this.health === 0) {
                 this.game.gameOver
             }
@@ -270,20 +273,16 @@
         {
             setTimeout(function() {
                 return    
-                // player.setTint(0xffffff);
                 }, 200);    
-            // console.log(this)
             if (!this.physics.world.isPaused){
-                pauseText = this.add.text(640, 400, 'PAUSED', {fontSize: '24px', fill: '#000'})
+                pauseText = this.add.text(640, 400, 'PAUSED', {fontSize: '40px', fill: '#d3007e'})
                 pauseText.setScrollFactor(0);
-                this.physics.pause()
+                this.physics.world.pause()
             }
             else {
                 this.physics.resume() 
                 pauseText.destroy();
             }
-            // if(this.){
-            // pauseText = this.add.text(640, 500, 'Paused', {fontSize: '24px', fill: '#000'})
         }
         else if (health <= 0) {
             // console.log(this.)
@@ -292,22 +291,24 @@
         else 
             {
                 player.setVelocityX(0);
-
                 player.anims.play('turn');
             }
     }
 
     function collectKrillCB (player, krill) {
             krill.disableBody(true, true);
+            nom.play();
             let multiplier = Number(krill.scaleX);
             player.scaleX = player.scaleX + .05;
             player.scaleY = player.scaleY + .05;
             score += 100*multiplier;
             if (health < 100) {
                 health += 5;
-                playerHealthText.setText(`Health: ${health}`);
             }
-                playerHealthText.setText(`Health: ${health}`);
+            if (health > 100) {
+                health = 100
+            }
+            playerHealthText.setText(`Health: ${health}`);
             scoreText.setText(`Score: ${score}`);
 
             if (krills.countActive(true) === 0) {
@@ -326,33 +327,33 @@
             }
         }
         function hitJellyFishCB (player, jelly) {
-            console.log('hit')
+            player.scaleX = 2;
+            player.scaleY = 2;
             if (health > 1) {
                 health -= 1;
-                playerHealthText.setText(`Health: ${health}`);
                 player.setTint (0xff0000);
-
-                var delayInMilliseconds = 100; //1 second
                 setTimeout(function() {
                     player.setTint(0xffffff);
-                }, delayInMilliseconds);    
+                }, 100);    
             }
-
             else if (health === 1) {
                 health -= 1;
-            playerHealthText.setText(`Health: ${health}`);
             this.physics.pause();
             pauseText = this.add.image(640, 400, 'gameOver')
             pauseText.setScrollFactor(0);
-
             player.setTint (0xff0000);
-
-            player.anims.play('turn');
-
             gameOver = true;
-            
             }
+            playerHealthText.setText(`Health: ${health}`);
         }
+
+        // funtion startTitle () {
+        //     startText = this.add.text(640, 400, 'EAT THE KRILL', {fontSize: '100px', fill: '#d3007e'})
+        //     startText.setScrollFactor(0);
+        //     setTimeout(()=>{
+        //         startText.destroy()
+        //     }, 3000)
+        // }
 
 
 
